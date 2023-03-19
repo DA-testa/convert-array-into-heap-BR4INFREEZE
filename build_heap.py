@@ -36,8 +36,7 @@ def main():
         if file_name.__contains__('a'):
             print("INPUT-OUTPUT ERROR")
             return
-        file = os.path.join(os.getcwd(), 'test', file_name)
-        with open(file) as f:
+        with open("./tests/" + file_name) as f:
             n = int(f.readline())
             data = list(map(int, f.readline().split()))
             assert len(data) == n
