@@ -1,42 +1,50 @@
-# python3
+import os
 
 
-def build_heap(data):
+def change(data,size,i,swaps):
+    kp,lp = 2*i+1,2*i+2
+    maxed = i
+    if kp < size and data[kp] < data[maxed]:
+        maxed = kp
+    if lp < size and data[lp] < data[maxed]:
+        maxed = lp
+    if i != maxed:
+        data[i], data[maxed] = data[maxed], data[i]
+        swaps.append((i, maxed))
+        change(data,size,maxed,swaps)
+
+
+def sorter(data,size):
     swaps = []
-    # TODO: Creat heap and heap sort
-    # try to achieve  O(n) and not O(n2)
-
-
+    for i in range(size//2,-1,-1):
+        change(data,size,i,swaps)
     return swaps
 
 
 def main():
-    
-    # TODO : add input and corresponding checks
-    # add another input for I or F 
-    # first two tests are from keyboard, third test is from a file
-
-
-    # input from keyboard
-    n = int(input())
-    data = list(map(int, input().split()))
-
-    # checks if lenght of data is the same as the said lenght
-    assert len(data) == n
-
-    # calls function to assess the data 
-    # and give back all swaps
-    swaps = build_heap(data)
-
-    # TODO: output how many swaps were made, 
-    # this number should be less than 4n (less than 4*len(data))
-
-
-    # output all swaps
-    print(len(swaps))
-    for i, j in swaps:
-        print(i, j)
-
-
-if __name__ == "__main__":
-    main()
+    first_input = input()
+    if first_input.__contains__('I'):
+        n = int(input())
+        data = list(map(int, input().split()))
+        assert len(data) == n
+        swaps = sorter(data,n)
+        print(len(swaps))
+        for i, j in swaps:
+            print(i, j)
+    elif first_input.__contains__('F'):
+        file_name = input()
+        if file_name.__contains__('a'):
+            print("INPUT-OUTPUT ERROR")
+            return
+        with open("./tests/" + file_name) as f:
+            n = int(f.readline())
+            data = list(map(int, f.readline().split()))
+            assert len(data) == n
+            swaps = sorter(data,n)
+            print(len(swaps))
+            for i, j in swaps:
+                print(i, j)
+    else:
+        print("INPUT-OUTPUT ERROR")
+        return
+main()
