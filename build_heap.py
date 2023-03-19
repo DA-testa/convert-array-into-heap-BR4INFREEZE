@@ -1,31 +1,25 @@
 import os
 
-def bh(data,i,x,swaps):
-    while(True):
-        kp, lp = i*2+1, i*2+2
-        if max(kp,lp) < x:
-            if data[i] >= max(data[kp], data[lp]):
-                break
-            elif data[kp] > data[lp]:
-                swaps = change(data,i,kp,swaps)
-                i = kp
-            else:
-                swaps = change(data, i, lp,swaps)
-                i = lp
-        else:
-            break
-    return swaps
-def change(data,i,j,swaps):
-    data[i],data[j] = data[j],data[i]
-    swaps.append(i), swaps.append(j)
-    return swaps
+
+def change(data,size,i,swaps):
+    kp,lp = 2*i+1,2*i+2
+    maxed = i
+    if kp < size and data[kp] < data[maxed]:
+        maxed = kp
+    if lp < size and data[lp] < data[maxed]:
+        maxed = lp
+    if i != maxed:
+        data[i], data[maxed] = data[maxed], data[i]
+        swaps.append((i, maxed))
+        change(data,size,maxed,swaps)
+
 
 def sorter(data,size):
     swaps = []
-    for k in range(size-1,0,-1):
-        swaps = change(data,0,k,swaps)
-        swaps = bh(data,0,k,swaps)
+    for i in range(size//2,-1,-1):
+        change(data,size,i,swaps)
     return swaps
+
 
 def main():
     first_input = input()
@@ -33,9 +27,10 @@ def main():
         n = int(input())
         data = list(map(int, input().split()))
         assert len(data) == n
-        sorter(data,n)
-        for a in data:
-            print(a,end='')
+        swaps = sorter(data,n)
+        print(len(swaps))
+        for i, j in swaps:
+            print(i, j)
     elif first_input.__contains__('F'):
         file_name = input()
         if file_name.__contains__('a'):
@@ -46,9 +41,10 @@ def main():
             n = int(f.readline())
             data = list(map(int, f.readline().split()))
             assert len(data) == n
-            sorter(data,n)
-            for a in data:
-                print(a, end='')
+            swaps = sorter(data,n)
+            print(len(swaps))
+            for i, j in swaps:
+                print(i, j)
     else:
         print("INPUT-OUTPUT ERROR")
         return
